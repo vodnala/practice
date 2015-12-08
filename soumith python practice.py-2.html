@@ -1,0 +1,71 @@
+
+# coding: utf-8
+
+# In[9]:
+
+from sympy import *
+from sympy import sqrt
+from sympy.matrices import *
+from sympy.abc import *
+init_printing()
+
+
+# In[10]:
+
+omega, alpha_1, alpha_2, alpha_3, A_0, A_1, A_2, a, b, c, phi = symbols("omega alpha_1 alpha_2 alpha_3 A_0 A_1 A_2 a b c phi", real = True)
+
+
+# In[11]:
+
+eqn1 = alpha_1*A_0+alpha_2*A_0**2+alpha_2/2*A_1**2+alpha_3*A_0**3+3*alpha_3/2*A_0*A_1**2
+eqn1
+
+
+# In[12]:
+
+eqn1_subs = eqn1.subs(A_0,a+b*A_1+c*A_1**2)
+eqn1_subs
+
+
+# In[13]:
+
+eqn1_subs.expand().subs({A_1:0})
+
+
+# In[14]:
+
+a_ans = solve(eqn1_subs.expand().subs({A_1:0}),a)
+a_ans[0]
+
+
+# In[15]:
+
+b_ans = solve(eqn1_subs.expand().coeff(A_1).subs(a,a_ans[0]),b)
+b_ans[0]
+
+
+# In[16]:
+
+c_ans = solve(eqn1_subs.expand().coeff(A_1**2).subs({a:a_ans[0],b:b_ans[0]}),c)
+c_ans
+
+
+# In[17]:
+
+exp3 =-A_1 *omega**2 * cos(phi)-A_2*4*omega**2*cos(2*phi)+(alpha_1*x+alpha_2*x**2+alpha_3*x**3).subs(x,A_0+A_1*cos(phi)+A_2*cos(2*phi)).expand()
+exp3
+
+
+# In[18]:
+
+sub1 = {cos(2*phi)**3: (1/4*(cos(6*phi)+3*cos(2*phi)))}
+sub2 = {cos(phi)**3:1/4*(cos(3*phi)+3*cos(phi))}
+sub3 = {cos(phi)*cos(2*phi)**2:1/4*(cos(5*phi)+cos(3*phi)-2*cos(phi))}
+sub4 = {cos(phi)**2*cos(2*phi):1/4*cos(4*phi)+1/4+1/2*cos(2*phi)}
+sub5 = {cos(2*phi)**2:1/2*(cos(4*phi)+1)}
+sub6 = {cos(phi)*cos(2*phi):2*cos(phi)**3-cos(phi)}
+sub7 = {cos(phi)**2:1/2*(cos(2*phi)+1)}
+sub8 = sub2
+exp4 = exp3.subs(sub1).subs(sub2).subs(sub3).subs(sub4).subs(sub5).subs(sub6).subs(sub8).subs(sub7).expand()
+exp4
+
